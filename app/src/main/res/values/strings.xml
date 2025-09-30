@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">EssentialCode</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_auth">AuthActivity</string>
+</resources>

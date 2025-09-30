@@ -1,0 +1,140 @@
+package com.logixphere.essentialcode.ui.auth
+
+import android.util.Log
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Fingerprint
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.rounded.Visibility
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.logixphere.essentialcode.R
+import com.logixphere.essentialcode.ui.theme.ColorPrimary
+import com.logixphere.essentialcode.utils.LPTextField
+import com.logixphere.essentialcode.utils.ScreenUtil
+import com.logixphere.essentialcode.utils.ShowLoading
+import com.logixphere.essentialcode.viewmodels.AuthViewModel
+import com.logixphere.essentialcode.viewmodels.LoginEvent
+
+@Composable
+fun SignInView(navController: NavController) {
+    val viewModel: AuthViewModel = hiltViewModel()
+
+    LoginScreen(viewModel)
+}
+
+@Composable
+private fun LoginScreen(viewModel: AuthViewModel) {
+    val loginState by viewModel.uiState.collectAsState()
+
+
+    if(viewModel.loading.value == true) ShowLoading {}
+
+    Scaffold(
+        modifier = Modifier.fillMaxSize(), containerColor = Color.Transparent
+    ) { innerPadding ->
+        Box {
+            Image(
+                modifier = Modifier.fillMaxSize(),
+                painter = painterResource(R.drawable.bg_login),
+                contentDescription = "background_login",
+                contentScale = ContentScale.FillBounds
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 50.dp)
+                        .padding(horizontal = 30.dp),
+                ) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    LPTextField(
+                        value = loginState.userLogin,
+                        onValueChange = { viewModel.onEvent(LoginEvent.UserLoginChanged(it)) },
+                        label = "Username",
+                        isError = loginState.userLoginError,
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            keyboardType = KeyboardType.Email
+                        )
+                    )
+                    Spacer(modifier = Modifier.height(30.dp))
+                    LPTextField(
+                        value = loginState.userPwd,
+                        onValueChange = { viewModel.onEvent(LoginEvent.UserPWDChanged(it)) },
+                        label = "Password",
+                        isError = loginState.userPwdError,
+                        visualTransformation = if (loginState.pwdFieldVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+                        trailingIcon = {
+                            val image = if (loginState.pwdFieldVisibility)
+                                Icons.Rounded.Visibility
+                            else
+                                Icons.Filled.VisibilityOff
+
+                            IconButton({ viewModel.changeVisiblePassword(loginState.pwdFieldVisibility) }) {
+                                Icon(image, "Visibility")
+                            }
+                        },
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            keyboardType = KeyboardType.Password
+                        )
+                    )
+                    Spacer(modifier = Modifier.height(30.dp))
+                    OutlinedButton(onClick = {
+                        viewModel.onEvent(LoginEvent.Loading(true))
+                    }) {
+                        Text("Login")
+                    }
+                }
+            }
+        }
+    }
+}
