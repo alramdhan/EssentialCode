@@ -76,7 +76,7 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)
 
-    implementation(libs.dotlottie)
+    implementation(libs.lottie.compose)
 
     // dagger hilt
     implementation(libs.hilt.android)

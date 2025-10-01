@@ -1,8 +1,8 @@
 package com.logixphere.essentialcode.ui.auth
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,18 +15,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Fingerprint
+import androidx.compose.material.icons.filled.GMobiledata
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.rounded.Visibility
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -37,8 +37,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -48,11 +46,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.logixphere.essentialcode.R
-import com.logixphere.essentialcode.ui.theme.ColorPrimary
 import com.logixphere.essentialcode.utils.LPTextField
 import com.logixphere.essentialcode.utils.ScreenUtil
 import com.logixphere.essentialcode.utils.ShowLoading
@@ -70,12 +66,11 @@ fun SignInView(navController: NavController) {
 private fun LoginScreen(viewModel: AuthViewModel) {
     val loginState by viewModel.uiState.collectAsState()
 
-
     if(viewModel.loading.value == true) ShowLoading {}
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(), containerColor = Color.Transparent
-    ) { innerPadding ->
+    Surface(
+        modifier = Modifier.fillMaxSize()
+    ) {
         Box {
             Image(
                 modifier = Modifier.fillMaxSize(),
@@ -85,8 +80,8 @@ private fun LoginScreen(viewModel: AuthViewModel) {
             )
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -96,6 +91,33 @@ private fun LoginScreen(viewModel: AuthViewModel) {
                         .padding(top = 50.dp)
                         .padding(horizontal = 30.dp),
                 ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        content = {
+                            Column(modifier = Modifier.width(ScreenUtil.getScreenWidth(.5f))) {
+                                Text(
+                                    "Login 1",
+                                    fontSize = TextUnit(
+                                        value = 32f,
+                                        type = TextUnitType.Sp
+                                    ),
+                                    fontFamily = FontFamily(
+                                        Font(R.font.nicomoji_regular, FontWeight.Normal)
+                                    )
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text("Signin by doing it self and lorem ipsum")
+                            }
+                            Spacer(modifier = Modifier.width(30.dp))
+                            Image(
+                                modifier = Modifier.width(80.dp), painter = painterResource(
+                                    R.mipmap.ic_launcher_foreground
+                                ), contentDescription = "Logo App"
+                            )
+                        }
+                    )
                     Spacer(modifier = Modifier.height(16.dp))
                     LPTextField(
                         value = loginState.userLogin,
@@ -106,7 +128,7 @@ private fun LoginScreen(viewModel: AuthViewModel) {
                             keyboardType = KeyboardType.Email
                         )
                     )
-                    Spacer(modifier = Modifier.height(30.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
                     LPTextField(
                         value = loginState.userPwd,
                         onValueChange = { viewModel.onEvent(LoginEvent.UserPWDChanged(it)) },
@@ -127,11 +149,42 @@ private fun LoginScreen(viewModel: AuthViewModel) {
                             keyboardType = KeyboardType.Password
                         )
                     )
-                    Spacer(modifier = Modifier.height(30.dp))
-                    OutlinedButton(onClick = {
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+
+                            },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Checkbox(
+                            checked = false,
+                            onCheckedChange = {
+
+                            }
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Remember me")
+                    }
+                    OutlinedButton(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        onClick = {
                         viewModel.onEvent(LoginEvent.Loading(true))
                     }) {
                         Text("Login")
+                    }
+                    Spacer(modifier = Modifier.height(30.dp))
+                    Text("Or sign in with")
+                    Spacer(modifier = Modifier.height(30.dp))
+                    FilledIconButton(
+                        onClick = {
+
+                        },
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Icon(Icons.Default.GMobiledata, "google")
                     }
                 }
             }
