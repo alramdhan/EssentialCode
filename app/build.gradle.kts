@@ -55,7 +55,7 @@ android {
 
 dependencies {
     // firebase
-    implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
+    implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth.ktx)
 
     implementation(libs.androidx.core.ktx)

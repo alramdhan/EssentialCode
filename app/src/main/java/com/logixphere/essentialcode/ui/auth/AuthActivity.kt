@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -71,7 +72,9 @@ private fun LoginScreen(viewModel: AuthViewModel) {
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
-        Box {
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
             Image(
                 modifier = Modifier.fillMaxSize(),
                 painter = painterResource(R.drawable.bg_login),
@@ -88,12 +91,11 @@ private fun LoginScreen(viewModel: AuthViewModel) {
                     verticalArrangement = Arrangement.Center,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 50.dp)
                         .padding(horizontal = 30.dp),
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
+                        horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,
                         content = {
                             Column(modifier = Modifier.width(ScreenUtil.getScreenWidth(.5f))) {
@@ -134,7 +136,7 @@ private fun LoginScreen(viewModel: AuthViewModel) {
                         onValueChange = { viewModel.onEvent(LoginEvent.UserPWDChanged(it)) },
                         label = "Password",
                         isError = loginState.userPwdError,
-                        visualTransformation = if (loginState.pwdFieldVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+                        visualTransformation = if (!loginState.pwdFieldVisibility) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
                             val image = if (loginState.pwdFieldVisibility)
                                 Icons.Rounded.Visibility
@@ -165,7 +167,7 @@ private fun LoginScreen(viewModel: AuthViewModel) {
                             }
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("Remember me")
+                        Text("Remember Me")
                     }
                     OutlinedButton(
                         modifier = Modifier
@@ -182,7 +184,8 @@ private fun LoginScreen(viewModel: AuthViewModel) {
                         onClick = {
 
                         },
-                        shape = RoundedCornerShape(12.dp)
+                        shape = RoundedCornerShape(14.dp),
+                        modifier = Modifier.size(64.dp)
                     ) {
                         Icon(Icons.Default.GMobiledata, "google")
                     }
