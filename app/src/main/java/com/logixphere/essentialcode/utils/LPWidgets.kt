@@ -18,8 +18,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.logixphere.essentialcode.ui.theme.Purple40
-import com.logixphere.essentialcode.viewmodels.AuthViewModel
-import com.logixphere.essentialcode.viewmodels.LoginEvent
 
 @Composable
 fun LPTextField(
